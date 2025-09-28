@@ -1,0 +1,12 @@
+# Archivos de Terraform que no deben versionarse
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+registry.terraform.io/
+providers/
