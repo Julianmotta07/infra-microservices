@@ -40,8 +40,11 @@ jobs:
             -backend-config="container_name=tfstate" \
             -backend-config="key=infra-${GITHUB_REF_NAME}.tfstate"
 
-      - name: Force unlock Terraform state (temporary)
-        run: terraform force-unlock -force 520d0a40-784a-af35-e843-e9a5ced40aa9 || echo "No lock found or already released"
+      - name: Import existing resources (temporary)
+        run: |
+          terraform import azurerm_resource_group.rg /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/my-microservices-rg
+          terraform import azurerm_container_registry.acr /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/my-microservices-rg/providers/Microsoft.ContainerRegistry/registries/mymicroservicesacr
+          terraform import azurerm_service_plan.shared_plan /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/my-microservices-rg/providers/Microsoft.Web/serverfarms/my-microservices-rg-plan
 
       - name: Terraform Plan
         run: |
