@@ -44,7 +44,7 @@ jobs:
         run: |
           export TF_LOG=DEBUG
           terraform plan \
-            -var-file="variables.tfvars" \
+            -var-file="terraform.tfvars" \
             -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
             -lock-timeout=5m \
             -out=tfplan
@@ -53,6 +53,6 @@ jobs:
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/stage' || github.ref == 'refs/heads/production'
         run: |
           terraform apply \
-            -var-file="variables.tfvars" \
+            -var-file="terraform.tfvars" \
             -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
             -auto-approve tfplan
