@@ -40,9 +40,6 @@ jobs:
             -backend-config="container_name=tfstate" \
             -backend-config="key=infra-${GITHUB_REF_NAME}.tfstate"
 
-      - name: Force unlock Terraform state (temporary)
-        run: terraform force-unlock -force 520d0a40-784a-af35-e843-e9a5ced40aa9 || echo "No lock found or already released"
-
       - name: Terraform Plan
         run: |
           export TF_LOG=DEBUG
