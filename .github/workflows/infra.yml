@@ -41,7 +41,7 @@ jobs:
             -backend-config="key=infra-${GITHUB_REF_NAME}.tfstate"
 
       - name: Force unlock Terraform state (temporary)
-        run: terraform force-unlock -force e434be3d-bd49-5d8b-2792-d8aaec4bf00a || echo "No lock found or already released"
+        run: terraform force-unlock -force ba6b9257-65bd-a0a1-2f0d-aa3b218ad779 || echo "No lock found or already released"
 
       - name: Terraform Plan
         run: |
@@ -50,6 +50,7 @@ jobs:
             -var "resource_group_name=my-microservices-rg" \
             -var "location=East US" \
             -var "acr_name=mymicroservicesacr" \
+            -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
             -var 'microservices=[{"name":"auth-api","image":"microservice-app-example-auth-api:latest","port":8000},{"name":"users-api","image":"microservice-app-example-users-api:latest","port":8083},{"name":"todos-api","image":"microservice-app-example-todos-api:latest","port":8082},{"name":"frontend","image":"microservice-app-example-frontend:latest","port":8080},{"name":"log-processor","image":"microservice-app-example-log-message-processor:latest","port":5000}]' \
             -lock-timeout=5m \
             -out=tfplan
@@ -61,5 +62,6 @@ jobs:
             -var "resource_group_name=my-microservices-rg" \
             -var "location=East US" \
             -var "acr_name=mymicroservicesacr" \
+            -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
             -var 'microservices=[{"name":"auth-api","image":"microservice-app-example-auth-api:latest","port":8000},{"name":"users-api","image":"microservice-app-example-users-api:latest","port":8083},{"name":"todos-api","image":"microservice-app-example-todos-api:latest","port":8082},{"name":"frontend","image":"microservice-app-example-frontend:latest","port":8080},{"name":"log-processor","image":"microservice-app-example-log-message-processor:latest","port":5000}]' \
             -auto-approve tfplan
