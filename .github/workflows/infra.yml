@@ -44,7 +44,10 @@ jobs:
         run: terraform force-unlock -force 5fb2d27c-0651-a537-86c7-7db9444df57e || echo "No lock found or already released"
 
       - name: Terraform Plan
-        run: terraform plan
+        run: |
+          export TF_LOG=DEBUG
+          terraform plan -lock-timeout=5m -out=tfplan
+
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/stage' || github.ref == 'refs/heads/production'
