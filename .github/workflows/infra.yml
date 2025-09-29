@@ -1,0 +1,67 @@
+name: Terraform Infrastructure
+
+on:
+  push:
+    branches:
+      - dev
+      - stage
+      - production
+  pull_request:
+    branches:
+      - dev
+      - stage
+      - production
+
+jobs:
+  terraform:
+    name: 'Terraform Plan & Apply'
+    runs-on: ubuntu-latest
+
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.13.3
+
+      - name: Terraform Init
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=tfstate-rg" \
+            -backend-config="storage_account_name=tfstatejm07" \
+            -backend-config="container_name=tfstate" \
+            -backend-config="key=infra-${GITHUB_REF_NAME}.tfstate"
+
+      - name: Force unlock Terraform state (temporary)
+        run: terraform force-unlock -force 520d0a40-784a-af35-e843-e9a5ced40aa9 || echo "No lock found or already released"
+
+      - name: Terraform Plan
+        run: |
+          export TF_LOG=DEBUG
+          terraform plan \
+            -var "resource_group_name=my-microservices-rg" \
+            -var "location=East US" \
+            -var "acr_name=mymicroservicesacr" \
+            -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
+            -var 'microservices=[{"name":"auth-api","image":"microservice-app-example-auth-api:latest","port":8000},{"name":"users-api","image":"microservice-app-example-users-api:latest","port":8083},{"name":"todos-api","image":"microservice-app-example-todos-api:latest","port":8082},{"name":"frontend","image":"microservice-app-example-frontend:latest","port":8080},{"name":"log-processor","image":"microservice-app-example-log-message-processor:latest","port":5000}]' \
+            -lock-timeout=5m \
+            -out=tfplan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/stage' || github.ref == 'refs/heads/production'
+        run: |
+          terraform apply \
+            -var "resource_group_name=my-microservices-rg" \
+            -var "location=East US" \
+            -var "acr_name=mymicroservicesacr" \
+            -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
+            -var 'microservices=[{"name":"auth-api","image":"microservice-app-example-auth-api:latest","port":8000},{"name":"users-api","image":"microservice-app-example-users-api:latest","port":8083},{"name":"todos-api","image":"microservice-app-example-todos-api:latest","port":8082},{"name":"frontend","image":"microservice-app-example-frontend:latest","port":8080},{"name":"log-processor","image":"microservice-app-example-log-message-processor:latest","port":5000}]' \
+            -auto-approve tfplan
