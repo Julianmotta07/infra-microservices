@@ -42,9 +42,9 @@ jobs:
 
       - name: Import existing resources (temporary)
         run: |
-          terraform import azurerm_resource_group.rg /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/my-microservices-rg
-          terraform import azurerm_container_registry.acr /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/my-microservices-rg/providers/Microsoft.ContainerRegistry/registries/mymicroservicesacr
-          terraform import azurerm_service_plan.shared_plan /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/my-microservices-rg/providers/Microsoft.Web/serverfarms/my-microservices-rg-plan
+          terraform import -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" azurerm_resource_group.rg /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/my-microservices-rg
+          terraform import -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" azurerm_container_registry.acr /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/my-microservices-rg/providers/Microsoft.ContainerRegistry/registries/mymicroservicesacr
+          terraform import -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" azurerm_service_plan.shared_plan /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/my-microservices-rg/providers/Microsoft.Web/serverfarms/my-microservices-rg-plan
 
       - name: Terraform Plan
         run: |
