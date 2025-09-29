@@ -40,12 +40,18 @@ jobs:
             -backend-config="container_name=tfstate" \
             -backend-config="key=infra-${GITHUB_REF_NAME}.tfstate"
 
+      - name: Force unlock Terraform state (temporary)
+        run: terraform force-unlock -force 520d0a40-784a-af35-e843-e9a5ced40aa9 || echo "No lock found or already released"
+
       - name: Terraform Plan
         run: |
           export TF_LOG=DEBUG
           terraform plan \
-            -var-file="terraform.tfvars" \
+            -var "resource_group_name=my-microservices-rg" \
+            -var "location=East US" \
+            -var "acr_name=mymicroservicesacr" \
             -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
+            -var 'microservices=[{"name":"auth-api","image":"microservice-app-example-auth-api:latest","port":8000},{"name":"users-api","image":"microservice-app-example-users-api:latest","port":8083},{"name":"todos-api","image":"microservice-app-example-todos-api:latest","port":8082},{"name":"frontend","image":"microservice-app-example-frontend:latest","port":8080},{"name":"log-processor","image":"microservice-app-example-log-message-processor:latest","port":5000}]' \
             -lock-timeout=5m \
             -out=tfplan
 
@@ -53,6 +59,9 @@ jobs:
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/stage' || github.ref == 'refs/heads/production'
         run: |
           terraform apply \
-            -var-file="terraform.tfvars" \
+            -var "resource_group_name=my-microservices-rg" \
+            -var "location=East US" \
+            -var "acr_name=mymicroservicesacr" \
             -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
+            -var 'microservices=[{"name":"auth-api","image":"microservice-app-example-auth-api:latest","port":8000},{"name":"users-api","image":"microservice-app-example-users-api:latest","port":8083},{"name":"todos-api","image":"microservice-app-example-todos-api:latest","port":8082},{"name":"frontend","image":"microservice-app-example-frontend:latest","port":8080},{"name":"log-processor","image":"microservice-app-example-log-message-processor:latest","port":5000}]' \
             -auto-approve tfplan
