@@ -44,11 +44,8 @@ jobs:
         run: |
           export TF_LOG=DEBUG
           terraform plan \
-            -var "resource_group_name=my-microservices-rg" \
-            -var "location=East US" \
-            -var "acr_name=mymicroservicesacr" \
             -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
-            -var 'microservices=[{"name":"auth-api","image":"microservice-app-example-auth-api:latest","port":8000},{"name":"users-api","image":"microservice-app-example-users-api:latest","port":8083},{"name":"todos-api","image":"microservice-app-example-todos-api:latest","port":8082},{"name":"frontend","image":"microservice-app-example-frontend:latest","port":8080},{"name":"log-processor","image":"microservice-app-example-log-message-processor:latest","port":5000}]' \
+            -var-file="terraform.tfvars" \
             -lock-timeout=5m \
             -out=tfplan
 
@@ -56,9 +53,6 @@ jobs:
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/stage' || github.ref == 'refs/heads/production'
         run: |
           terraform apply \
-            -var "resource_group_name=my-microservices-rg" \
-            -var "location=East US" \
-            -var "acr_name=mymicroservicesacr" \
             -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
-            -var 'microservices=[{"name":"auth-api","image":"microservice-app-example-auth-api:latest","port":8000},{"name":"users-api","image":"microservice-app-example-users-api:latest","port":8083},{"name":"todos-api","image":"microservice-app-example-todos-api:latest","port":8082},{"name":"frontend","image":"microservice-app-example-frontend:latest","port":8080},{"name":"log-processor","image":"microservice-app-example-log-message-processor:latest","port":5000}]' \
+            -var-file="terraform.tfvars" \
             -auto-approve tfplan
