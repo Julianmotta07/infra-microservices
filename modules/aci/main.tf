@@ -14,8 +14,8 @@ resource "azurerm_container_group" "containers" {
   container {
     name   = each.value.name
     image  = each.value.image
-    cpu    = 1
-    memory = 1.5
+    cpu    = 0.5
+    memory = 1
 
     ports {
       port     = 80

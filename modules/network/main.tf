@@ -11,4 +11,15 @@ resource "azurerm_subnet" "subnets" {
   resource_group_name  = var.rg_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.${count.index}.0/24"]
+
+  delegation {
+    name = "aci-delegation"
+
+    service_delegation {
+      name = "Microsoft.ContainerInstance/containerGroups"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action",
+      ]
+    }
+  }
 }
