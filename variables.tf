@@ -1,28 +1,26 @@
-variable "resource_group_name" {
-  description = "Nombre del Resource Group"
+variable "rg_name" {
   type        = string
+  description = "Resource group name"
 }
 
 variable "location" {
-  description = "Región de Azure"
   type        = string
+  description = "Azure region"
+  default     = "eastus"
 }
 
 variable "acr_name" {
-  description = "Nombre del Azure Container Registry"
   type        = string
+  description = "Azure Container Registry name"
 }
 
-variable "microservices" {
-  description = "Lista de microservicios con nombre, imagen y puerto"
-  type = list(object({
-    name  = string
-    image = string
-    port  = number
-  }))
+variable "vnet_name" {
+  type        = string
+  description = "Virtual Network name"
 }
 
-variable "subscription_id" {
-  description = "ID de la suscripción de Azure"
-  type        = string
+variable "subnet_names" {
+  type        = list(string)
+  description = "List of subnet names"
+  default     = ["frontend", "backend"]
 }
