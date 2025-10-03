@@ -23,19 +23,3 @@ variable "acr_password" {
   description = "ACR admin password"
   sensitive   = true
 }
-
-variable "containers" {
-  description = "List of container definitions (name, image, subnet, public)"
-  type = list(object({
-    name   = string
-    image  = string
-    subnet = string
-    public = bool
-  }))
-}
-
-variable "frontend_ip" {
-  type        = bool
-  description = "Whether to expose the container publicly (frontend)"
-  default     = false
-}
