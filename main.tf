@@ -26,3 +26,14 @@ module "aci" {
   acr_username = module.acr.admin_username
   acr_password = module.acr.admin_password
 }
+
+# 4. API Management (Gateway)
+module "apim" {
+  source               = "./modules/apim"
+  rg_name              = module.rg.name
+  location             = var.location
+  apim_name            = var.apim_name
+  apim_publisher_name  = var.apim_publisher_name
+  apim_publisher_email = var.apim_publisher_email
+}
+

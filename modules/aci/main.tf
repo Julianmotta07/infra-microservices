@@ -9,6 +9,10 @@ resource "azurerm_container_group" "microservices" {
   ip_address_type     = "Public"
   dns_name_label      = "microservices-${substr(md5(var.rg_name), 0, 8)}"
 
+  #retry pattern
+
+    restart_policy = "Always"
+
   # REDIS - Necesario para todos-api y log-message-processor
   container {
     name   = "redis"
@@ -38,6 +42,8 @@ resource "azurerm_container_group" "microservices" {
       AUTH_API_PORT      = "8000"
       USERS_API_ADDRESS  = "http://127.0.0.1:8083"  # Cambiado a localhost!
       JWT_SECRET         = "PRFT"
+      RETRY_ATTEMPTS = "5"
+      RETRY_DELAY    = "3000" # milisegundos
     }
   }
 
@@ -56,6 +62,8 @@ resource "azurerm_container_group" "microservices" {
     environment_variables = {
       JWT_SECRET  = "PRFT"
       SERVER_PORT = "8083"
+      RETRY_ATTEMPTS = "5"
+      RETRY_DELAY    = "3000" # milisegundos
     }
   }
 
@@ -77,6 +85,8 @@ resource "azurerm_container_group" "microservices" {
       REDIS_HOST    = "127.0.0.1"  # Cambiado a localhost!
       REDIS_PORT    = "6379"
       REDIS_CHANNEL = "log_channel"
+      RETRY_ATTEMPTS = "5"
+      RETRY_DELAY    = "3000" # milisegundos
     }
   }
 
@@ -91,6 +101,8 @@ resource "azurerm_container_group" "microservices" {
       REDIS_HOST    = "127.0.0.1"  # Cambiado a localhost!
       REDIS_PORT    = "6379"
       REDIS_CHANNEL = "log_channel"
+      RETRY_ATTEMPTS = "5"
+      RETRY_DELAY    = "3000" # milisegundos
     }
   }
 
@@ -110,6 +122,8 @@ resource "azurerm_container_group" "microservices" {
       PORT              = "8080"
       AUTH_API_ADDRESS  = "http://127.0.0.1:8000"  # Cambiado a localhost!
       TODOS_API_ADDRESS = "http://127.0.0.1:8082"  # Cambiado a localhost!
+      RETRY_ATTEMPTS = "5"
+      RETRY_DELAY    = "3000" # milisegundos
     }
   }
 
