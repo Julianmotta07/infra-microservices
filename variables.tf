@@ -1,49 +1,39 @@
-#  Resource Group
-variable "microservicesRgJenniferCastro" {
+# 🔹 Resource Group
+variable "rg_name" {
   type        = string
   description = "Resource group name"
   default     = "microservicesRgJenniferCastro"
 }
 
-#  Azure Region
-variable "microservicesLocationJenniferCastro" {
+# 🔹 Azure Region
+variable "location" {
   type        = string
-  description = "Azure region where resources will be deployed"
+  description = "Azure region for all resources"
   default     = "eastus"
 }
 
-#  Azure Container Registry
-variable "microservicesAcrJenniferCastro" {
+# 🔹 Azure Container Registry
+variable "acr_name" {
   type        = string
   description = "Azure Container Registry name"
-  default     = "microservicesAcrJenniferCastro"
+  default     = "microservicesacrjennifercastro"
 }
 
-#  Azure API Management
-variable "microservicesApimJenniferCastro" {
+# 🔹 API Management (APIM)
+variable "apim_name" {
   type        = string
   description = "API Management service name"
   default     = "microservicesApimJenniferCastro"
 }
 
-#  API Management Publisher Name
-variable "microservicesApimPublisherNameJenniferCastro" {
+variable "apim_publisher_name" {
   type        = string
   description = "Name of the publisher for API Management"
   default     = "Jennifer Castro"
 }
 
-#  API Management Publisher Email
-variable "microservicesApimPublisherEmailJenniferCastro" {
+variable "apim_publisher_email" {
   type        = string
   description = "Publisher email contact for API Management"
-  default     = "1111540677@u.icesi.edu.co"
+  default     = "jennifer.castro@example.com"
 }
-
-#  Azure Container Instances (ACI)
-variable "microservicesAciJenniferCastro" {
-  type        = string
-  description = "Container Group name for microservices deployment"
-  default     = "microservicesAciJenniferCastro"
-}
-

@@ -11,7 +11,6 @@ resource "azurerm_api_management" "apim" {
   }
 }
 
-# Ejemplo de API registrada (placeholder, se puede reemplazar luego por tu frontend real)
 resource "azurerm_api_management_api" "frontend_api" {
   name                = "frontend-api"
   resource_group_name = var.rg_name
@@ -21,11 +20,9 @@ resource "azurerm_api_management_api" "frontend_api" {
   path                = "frontend"
   protocols           = ["https"]
 
-  import {
-    content_format = "swagger-link-json"
-    content_value  = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.json"
-  }
+  service_url = "http://frontend"
 }
+
 
 output "apim_name" {
   value = azurerm_api_management.apim.name
